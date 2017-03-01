@@ -10,5 +10,70 @@ using System.Text;
 public interface ICAService
 {
     [OperationContract]
-    void DoWork();
+    int PersonLogin(string user, string password);
+
+    [OperationContract]
+    bool RegisterPerson(PersonLite p);
+
+    [OperationContract]
+    bool ApplyForGrant(GrantRequest gr);
+
+    [OperationContract]
+    List<GrantType> GetGrantTypes();
+
+    List<GrantInfo> GetGrantsByPerson(int personId);
+}
+
+[DataContract]
+
+public class PersonLite
+{
+    [DataMember]
+    public string LastName { set; get; }
+
+    [DataMember]
+    public string FirstName { set; get; }
+
+    [DataMember]
+    public string Email { set; get; }
+
+    [DataMember]
+    public string Password { set; get; }
+
+    [DataMember]
+    public string Apartment { set; get; }
+
+    [DataMember]
+    public string Street { set; get; }
+
+    [DataMember]
+    public string City { set; get; }
+
+    [DataMember]
+    public string State { set; get; }
+
+    [DataMember]
+    public string Zipcode { set; get; }
+
+    [DataMember]
+    public string HomePhone { set; get; }
+
+    [DataMember]
+    public string WorkPhone { set; get; }
+}
+
+[DataContract]
+public class GrantInfo
+{
+    [DataMember]
+    public string GrantTypeName { set; get; }
+
+    [DataMember]
+    public string Explanation { set; get; }
+
+    [DataMember]
+    public decimal Amount { set; get; }
+
+    [DataMember]
+    public string Status { set; get; }
 }

@@ -11,12 +11,51 @@ public class CAService : ICAService
     Community_AssistEntities cae = new Community_AssistEntities();
     public bool ApplyForGrant(GrantRequest gr)
     {
-        throw new NotImplementedException();
+        bool result = true;
+        try
+        {
+            //GrantReview review = new GrantReview();
+            //review.GrantRequest = gr;
+            //review.GrantRequestStatus = "pending";
+            cae.GrantRequests.Add(gr);
+            //cae.GrantReviews.Add(review);
+            cae.SaveChanges();
+        }
+        catch(Exception ex)
+        {
+            result = false;
+            throw ex;
+            
+        }
+
+        return result;
     }
 
     public List<GrantInfo> GetGrantsByPerson(int personId)
     {
-        throw new NotImplementedException();
+        var grants = from g in cae.GrantRequests
+                     from r in g.GrantReviews
+                     where g.PersonKey == personId
+                     select new
+                     {
+                         g.GrantRequestDate,
+                         g.GrantRequestExplanation,
+                         g.GrantType.GrantTypeName,
+                         g.GrantRequestAmount,
+                         r.GrantRequestStatus
+                     };
+        List<GrantInfo> info = new List<GrantInfo>();
+        foreach(var gr in grants)
+        {
+            GrantInfo gi = new GrantInfo();
+            gi.GrantTypeName = gr.GrantTypeName;
+            gi.Explanation = gr.GrantRequestExplanation;
+            gi.Amount = (decimal)gr.GrantRequestAmount;
+            gi.Status = gr.GrantRequestStatus;
+
+            info.Add(gi);
+        }
+        return info;
     }
 
     public List<GrantType> GetGrantTypes()
